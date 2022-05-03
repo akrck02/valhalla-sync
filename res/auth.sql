@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS 
 auth (
-    token TEXT PRIMARY KEY, 
-    username TEXT, 
+    token TEXT, 
+    username TEXT PRIMARY KEY, 
     password TEXT, 
     email TEXT
 );

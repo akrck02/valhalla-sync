@@ -10,12 +10,11 @@ export class API {
     private port: number;
     private router: Router;
 
-
     constructor() {
         this.app = express();
         this.hostname = "127.0.0.1";
         this.port = 5500;
-        this.router = new Router("juan");
+        this.router = new Router("***");
     }
 
     public start(): void {
@@ -31,15 +30,9 @@ export class API {
             next();
         });
 
-        /* Get method is not allowed 
-        this.app.get(Router.API + '*', function (req: Request, res: Response) {
-            res.send({ "status": "failed", "reason": "Method not allowed" });
-        });*/
-
         /* Define every route with callbacks */
         const paths = this.router.PATHS;
         for (const key in paths) {
-            console.log("Sync-API", "[Route][New] " + key);
             const callback = paths[key];
             this.app.post(Router.API + key + "/", (req: Request, res: Response) => this.handleRequest(key,req,res,callback));
             this.app.get(Router.API + key + "/", (req: Request, res: Response) => {
@@ -66,8 +59,8 @@ export class API {
         const promise = callback(req,res);
 
         promise.then((data)  => {
-            if(data.status == "failed"){
-                res.statusCode = 400;
+            if(data.code){
+                res.statusCode = data.code;
             }
             res.send(data)
         })

@@ -1,15 +1,15 @@
 import { Database } from "../db"
 
-export class AuthDb extends Database {
+export class UserDb extends Database {
 
-    constructor() {
-        super("auth");
+    constructor(name : string) {
+        super(name + "-user");
         this.open().then(() => this.createTables())
     }
 
     async createTables() {
         const fs = require('fs');
-        const query = fs.readFileSync('res/auth.sql', 'utf8');
+        const query = fs.readFileSync('res/user-db.sql', 'utf8');
         await this.db.exec(query);
     }
 }

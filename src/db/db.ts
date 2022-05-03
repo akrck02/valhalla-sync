@@ -37,7 +37,7 @@ export class Database {
                 console.error(err.message);
                 return;
             }
-            console.log("Closed the database connection.");
+            this.log("Closed the database connection.");
         });
     }
 
@@ -53,6 +53,5 @@ export class Database {
     get() : any{
         return this.db;
     }
-
 
 }

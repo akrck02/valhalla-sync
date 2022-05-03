@@ -10,9 +10,9 @@ export class AuthModel {
     secret : string;
     
 
-    constructor(secret : string) {
+    constructor(secret : string = "***") {
         this.db = new AuthDb();
-        this.secret = "juan";
+        this.secret = secret;
     }
 
     /**
@@ -96,9 +96,8 @@ export class AuthModel {
      */
     public newAuthDevice(req : Request, res : Response) : Promise<any>{
         
-        
         return new Promise((resolve) => {
-            resolve({success: true, message: "Device created"});
+            resolve({success: false, message: "Not implemenet yet"});
         });
     }
 
