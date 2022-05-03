@@ -11,3 +11,4 @@ auth_device (
     device TEXT PRIMARY KEY,
     auth TEXT
 );
+

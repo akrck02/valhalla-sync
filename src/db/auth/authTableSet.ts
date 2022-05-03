@@ -7,14 +7,8 @@ export class AuthTableSet {
 
 
     static async createUserTable(db : any) {
-        await db.exec(
-            `CREATE TABLE IF NOT EXISTS user (
-                token TEXT,
-                username TEXT PRIMARY KEY,
-                password TEXT,
-                mail TEXT,
-            )`
-        ) 
-
+        const fs = require('fs');
+        const query = fs.readFileSync('res/auth.sql', 'utf8');
+        await db.exec(query);
     }
 }

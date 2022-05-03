@@ -76,7 +76,7 @@ export class AuthModel {
         }, this.secret);
 
 
-        const SQL = "INSERT INTO user(token, username, password, mail) VALUES (?,?,?,?)";
+        const SQL = "INSERT INTO auth(token, username, password, email) VALUES (?,?,?,?)";
         await this.db.get().run(
             SQL,
             token,

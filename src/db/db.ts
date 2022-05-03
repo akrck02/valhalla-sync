@@ -15,7 +15,7 @@ export class Database {
      */
     async open(){
         this.db = await open({
-            filename: `./db/${this.name}.db`,
+            filename: `db/${this.name}.db`,
             driver: sqlite3.Database
         });
       
