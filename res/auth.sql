@@ -1,6 +1,5 @@
 CREATE TABLE IF NOT EXISTS 
 auth (
-    token TEXT, 
     username TEXT PRIMARY KEY, 
     password TEXT, 
     email TEXT
@@ -8,7 +7,10 @@ auth (
 
 CREATE TABLE IF NOT EXISTS 
 auth_device (
-    device TEXT PRIMARY KEY,
-    auth TEXT
+    device INTEGER PRIMARY KEY AUTOINCREMENT,
+    auth TEXT,
+    platform TEXT,
+    token TEXT, 
+    FOREIGN KEY(auth) REFERENCES auth(username)
 );
 

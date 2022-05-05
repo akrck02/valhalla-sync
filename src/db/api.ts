@@ -96,27 +96,16 @@ export class API {
 
 
     /*
-    static checkAuth(req : Request, res : Response) {
-        const token = req.headers['oauth'];
-        if (token === undefined || !AuthModel.isAuthenticated(token + "")) {
-            res.send({
-                "status": "failed",
-                "reason": "Invalid API credentials"
-            });
-            return;
+        static checkDeviceAuth(req : Request, res : Response) {
+            const token = req.headers['device'];
+            if (token === undefined || !AuthModel.isDeviceAuthenticated(token + "")) {
+                res.send({
+                    "status": "failed",
+                    "reason": "Invalid API credentials"
+                });
+                return;
+            }
         }
-    }
-
-    static checkDeviceAuth(req : Request, res : Response) {
-        const token = req.headers['device'];
-        if (token === undefined || !AuthModel.isDeviceAuthenticated(token + "")) {
-            res.send({
-                "status": "failed",
-                "reason": "Invalid device credentials"
-            });
-            return;
-        }
-    }
     */
 
 }

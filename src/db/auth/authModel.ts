@@ -2,6 +2,7 @@
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 import { VerifyJWT } from "../../secure/jwt";
+import { INCORRECT_CREDENTIALS, MISSING_PARAMETERS, SOMETHING_WENT_WRONG } from "../core/responses";
 import { AuthDb } from "./authDb";
 
 export class AuthModel {
@@ -57,35 +58,86 @@ export class AuthModel {
      * @param res the current response 
      * @returns Promise that resolves whether or not the auth was registered
      */
-    public async newAuth(req : Request, res : Response) : Promise<any>{
+    public async register(req : Request, res : Response) : Promise<any>{
 
-        const username = req.body.username;
+        const username = req.body.user;
         const password = req.body.password;
         const mail = req.body.mail;
+        const device = req.body.device;
+        const platform = req.body.platform;
 
-        if(!username || !password || !mail){
-            return new Promise((resolve) => {
-                resolve({success: false, message: "Missing parameters"});
-            });
+        if(!username || !password || !mail || !device){
+            return MISSING_PARAMETERS;
         }
 
-        const token = sign({
-            username : username,
-            password : password,
-            mail : mail
-        }, this.secret);
-
-
-        const SQL = "INSERT INTO auth(token, username, password, email) VALUES (?,?,?,?)";
-        await this.db.get().run(
+        const SQL = "INSERT INTO auth(username, password, email) VALUES (?,?,?)";
+        const status = await this.db.get().run(
             SQL,
-            token,
             username,
             password,
             mail
         );
 
-        return new Promise((resolve) => resolve(token));
+        if(status.changes != 1){
+            return SOMETHING_WENT_WRONG;
+        }
+
+        return await this.registerDevice({
+            user: username,
+            mail : mail,
+            password : password,
+            platform: platform,
+            device : device
+        });
+    }
+
+    public async login(req : Request, res : Response) : Promise<any> {
+
+        // check parameters
+        const user = req.body.user;
+        const mail = req.body.mail;
+        const password = req.body.password;
+        const platform = req.body.platform;
+        let device =  req.body.device;
+        
+        // check if correct credentials
+        const LOGIN_SQL = "SELECT * FROM auth WHERE username=? AND password=?";
+        const login = await this.db.get().all(
+            LOGIN_SQL,
+            user,
+            password
+        );
+        
+        if(login.length < 0) {
+            return new Promise(r => r(INCORRECT_CREDENTIALS))
+        }
+
+        // if device send (check device) 
+        const DEVICE_SQL = "SELECT * FROM auth_device WHERE device=?";
+        const existingDevice = await this.db.get().all(
+            DEVICE_SQL,
+            device
+        );
+
+        if(existingDevice && existingDevice.length > 0) {
+            return await this.updateDevice({
+                user: user,
+                mail : mail,
+                password : password,
+                device : device
+            });
+        }
+        // else register device
+        else {
+            return await this.registerDevice({
+                user: user,
+                mail : mail,
+                password : password,
+                platform: platform,
+                device : device
+            });
+        }
+
     }
 
     /**
@@ -94,11 +146,79 @@ export class AuthModel {
      * @param res the current response 
      * @returns A promise that resolves whether or not the device was registered
      */
-    public newAuthDevice(req : Request, res : Response) : Promise<any>{
+    public async registerDevice(properties : {
+        device ?: string,
+        user ?: string,
+        mail ?: string,
+        password ?: string,
+        platform ?: string
+    } = {}) : Promise<any>{
+
+        if(!properties.user || !properties.device || !properties.password || !properties.mail){
+            return MISSING_PARAMETERS;
+        }
+
+        const token = sign({
+            username : properties.user,
+            password : properties.password,
+            mail     : properties.mail,
+            device   : properties.device
+        }, this.secret);
+
+        const SQL = "INSERT INTO auth_device(auth, platform, token) VALUES (?,?,?)";
+        const id = await this.db.get().run(
+            SQL,
+            properties.user,
+            properties.platform || "NULL",
+            token
+        );
         
-        return new Promise((resolve) => {
-            resolve({success: false, message: "Not implemenet yet"});
-        });
+        return new Promise((resolve) => resolve({
+            success : true,
+            token : token,
+            id: id.lastID
+        }));
+    }
+
+
+    /**
+    * Update a device token on users database
+    * @param req the current request
+    * @param res the current response 
+    * @returns A promise that resolves whether or not the device was registered
+    */
+    public async updateDevice(properties : {
+        device ?: string,
+        user ?: string,
+        mail ?: string,
+        password ?: string,
+        platform ?: string
+    } = {}) : Promise<any>{
+
+        if(!properties.user || !properties.device || !properties.password || !properties.mail){
+            return MISSING_PARAMETERS;
+        }
+
+        const token = sign({
+            username : properties.user,
+            password : properties.password,
+            mail     : properties.mail,
+            device   : properties.device
+        }, this.secret);
+        
+        const SQL = "UPDATE auth_device SET auth=?, platform=?, token=? WHERE device=?"
+        await this.db.get().run(
+            SQL,
+            properties.user,
+            properties.platform || "NULL",
+            token
+        );
+        
+        return new Promise((resolve) => resolve({
+            success : true,
+            token : token,
+            id: properties.device
+        }));
     }
 
 
