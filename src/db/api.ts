@@ -68,6 +68,7 @@ export class API {
             console.log("error",err);
             res.statusCode = 500;
             res.send({
+            "success" : false,
             "status": "failed",
             "reason": err.message
             });

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
-import { AuthModel } from "./auth/authModel";
+import { AuthDb } from "./auth/authDb";
+import { AuthHandler } from "./auth/handler/auth";
 import { NOT_IMPLEMENTED_YET, PONG } from "./core/responses";
 
 export class Router{
@@ -9,15 +10,15 @@ export class Router{
     public static API = `/${Router.PREFIX}/v${Router.VERSION}/`;
 
     public PATHS : {[key:string] : (req : Request, res : Response) => Promise<any>};
-    public auth : AuthModel;
+    public auth : AuthDb;
 
     public constructor(secret : string) {
-        this.auth = new AuthModel(secret);
+        this.auth = new AuthDb();
 
         this.PATHS = {
             "ping": () => PONG,
-            "register" : (req,res) => this.auth.register(req,res),
-            "login" : (req,res) => this.auth.login(req,res),
+            "register" : (req,res) => AuthHandler.register(req,res,this.auth,secret),
+            "login" : (req,res) => AuthHandler.login(req,res,this.auth,secret),
             "check/updates" : () => NOT_IMPLEMENTED_YET,
             "download" :  () => NOT_IMPLEMENTED_YET,
             "upload" :  () => NOT_IMPLEMENTED_YET,
