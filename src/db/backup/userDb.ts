@@ -3,8 +3,8 @@ import { Database } from "../db"
 export class UserDb extends Database {
 
     constructor(name : string) {
+        console.log("UserDB", "Opening database for user " + name)
         super(name + "-user");
-        this.open().then(() => this.createTables())
     }
 
     async createTables() {

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { MISSING_PARAMETERS, NOT_IMPLEMENTED_YET } from "../../core/responses";
+import TaskModel from "../model/taskModel";
 import { UserDb } from "../userDb";
 
 
@@ -13,42 +14,64 @@ interface UserData {
 
 export class BackupHandler {
 
-    public export(req : Request, res : Response) : Promise<any> {
+    public static import (req : Request, res : Response) : Promise<any> {
         return new Promise(r => r(NOT_IMPLEMENTED_YET))
     }
 
-    public import(req : Request, res : Response) : Promise<any> {
+    public static async export(req : Request, res : Response) : Promise<any> {
 
+        /*
         const data = req?.body?.data;
 
         if(!data) {
             return MISSING_PARAMETERS;
         }
+        */
 
-        this.importUser(data.user);
-        this.importTasks();
-        this.importNotes();
-        this.importConfig();
+        const user = req?.body?.user;
+        if(!user) {
+            return MISSING_PARAMETERS;
+        }
 
-        return new Promise(r => r(NOT_IMPLEMENTED_YET));
+        const db = new UserDb(user);
+        await db.open();
+
+        this.exportUser(user);
+        const tasks = await this.exportTasks(db, user);
+        this.exportNotes();
+        this.exportConfig();
+
+        return new Promise(r => r({
+            code : 200,
+            tasks: tasks
+        }));
     }
 
-    private async importUser(user : UserData) : Promise<any> {
+    private static async exportUser(user : UserData) : Promise<any> {
         if(!user.name || !user.email || !user.oauth){
             return MISSING_PARAMETERS
         }
 
     }
 
-    private importTasks() {
+    private static async exportTasks(db : UserDb, user : string) {
+        
+        const tasks = await TaskModel.getUserTasks(db.get(),"default"); 
+            
+        for (const index in tasks) {
+            const task = tasks[index];
+            tasks[index].labels = await TaskModel.getUserTaskLabels(db.get(), task.id);
+        }
+
+
+        return tasks
+    }
+
+    private static exportNotes() {
 
     }
 
-    private importNotes() {
-
-    }
-
-    private importConfig() {
+    private static exportConfig() {
 
     } 
 

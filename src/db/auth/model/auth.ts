@@ -7,8 +7,15 @@ import { AuthDb } from "../authDb";
 export default class AuthModel {
 
 
-    public static async login() {
+    public static async login(params : LoginParams, db : AuthDb) : Promise<boolean> {
+        const LOGIN_SQL = "SELECT * FROM auth WHERE username=? AND password=?";
+        const result = await db.get().all(
+            LOGIN_SQL,
+            params.user,
+            params.password
+        );
 
+        return new Promise((r) => r(new result.length > 0));
     }
 
 
@@ -102,6 +109,17 @@ export default class AuthModel {
             token : token,
             id: properties.device
         }));
+    }
+
+
+    public static async deviceExists(device : string, db : AuthDb) : Promise<boolean> {
+        const DEVICE_SQL = "SELECT * FROM auth_device WHERE device=?";
+        const devices = await db.get().all(
+            DEVICE_SQL,
+            device
+        );
+
+        return devices || devices.length > 0; 
     }
     
 

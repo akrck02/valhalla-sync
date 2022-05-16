@@ -81,25 +81,19 @@ export class AuthHandler {
         let device =  req.body.device;
         
         // check if correct credentials
-        const LOGIN_SQL = "SELECT * FROM auth WHERE username=? AND password=?";
-        const login = await db.get().all(
-            LOGIN_SQL,
-            user,
-            password
-        );
-        
-        if(login.length < 0) {
+        const login = await AuthModel.login({
+            user : user,
+            password : password
+        },db);
+
+        if(login) {
             return new Promise(r => r(INCORRECT_CREDENTIALS))
         }
 
         // if device send (check device) 
-        const DEVICE_SQL = "SELECT * FROM auth_device WHERE device=?";
-        const existingDevice = await db.get().all(
-            DEVICE_SQL,
-            device
-        );
 
-        if(existingDevice && existingDevice.length > 0) {
+
+        if(await AuthModel.deviceExists(device,db)) {
             return await AuthModel.updateDevice({
                 user: user,
                 mail : mail,

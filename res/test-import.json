@@ -7,22 +7,22 @@
     },
     
     "tasks" : {
-        "Development" : {
-            "1" : {
-                "author" : "akrck02",
-                "name" : "Develop levehnstein distance method",
-                "description" : "The lebvnhstein distance is the numerical difference between two strings calculated givin a value to every change that has to be done on A to be converted to B",
-                "start" : "12/01/2022",
-                "end" : "12/01/2022",
-                "done" : "false"
-            },
-            "2" : {
-                "author" : "akrck02",
-                "name" : "Develop searchbar component HTML/CSS/Typescript",
-                "start" : "12/01/2022",
-                "end" : "24/01/2022",
-                "done" : "true"
-            }
+        "1" : {
+            "author" : "akrck02",
+            "name" : "Develop levehnstein distance method",
+            "description" : "The lebvnhstein distance is the numerical difference between two strings calculated givin a value to every change that has to be done on A to be converted to B",
+            "start" : "12/01/2022",
+            "end" : "12/01/2022",
+            "done" : "false",
+            "labels" : ["Development","Today"]
+        },
+        "2" : {
+            "author" : "akrck02",
+            "name" : "Develop searchbar component HTML/CSS/Typescript",
+            "start" : "12/01/2022",
+            "end" : "24/01/2022",
+            "done" : "true",
+            "labels" : ["Development"]
         }
     }, 
     

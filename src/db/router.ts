@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { AuthDb } from "./auth/authDb";
 import { AuthHandler } from "./auth/handler/auth";
+import { BackupHandler } from "./backup/handler/backup";
 import { NOT_IMPLEMENTED_YET, PONG } from "./core/responses";
 
 export class Router{
@@ -22,6 +23,7 @@ export class Router{
             "check/updates" : () => NOT_IMPLEMENTED_YET,
             "download" :  () => NOT_IMPLEMENTED_YET,
             "upload" :  () => NOT_IMPLEMENTED_YET,
+            "export" : (req,res) => BackupHandler.export(req,res)
         }
     }
 
