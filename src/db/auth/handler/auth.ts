@@ -2,9 +2,9 @@
 import { Request, Response } from "express";
 import { sign } from "jsonwebtoken";
 import { VerifyJWT } from "../../../secure/jwt";
-import { INCORRECT_CREDENTIALS, MISSING_PARAMETERS, SOMETHING_WENT_WRONG } from "../../core/responses";
+import { INCORRECT_CREDENTIALS, MISSING_PARAMETERS, SOMETHING_WENT_WRONG } from "../../core/api/Responses";
+import AuthData from "../../core/data/AuthData";
 import { AuthDb } from "../authDb";
-import AuthModel from "../model/auth";
 
 export class AuthHandler {
 
@@ -62,13 +62,13 @@ export class AuthHandler {
             return MISSING_PARAMETERS;
         }
 
-       return await AuthModel.register({
+       return await AuthData.register({
            user: username,
            password: password,
            mail : mail,
            device : device,
            platform : platform
-       },db,secret)
+       },db.get(),secret)
     }
 
     public static async login(req : Request, res : Response, db : AuthDb, secret : string) : Promise<any> {
@@ -81,10 +81,13 @@ export class AuthHandler {
         let device =  req.body.device;
         
         // check if correct credentials
-        const login = await AuthModel.login({
+        const login = await AuthData.login({
             user : user,
-            password : password
-        },db);
+            password : password,
+            mail : mail,
+            platform : platform,
+            device : device
+        },db.get());
 
         if(login) {
             return new Promise(r => r(INCORRECT_CREDENTIALS))
@@ -93,23 +96,23 @@ export class AuthHandler {
         // if device send (check device) 
 
 
-        if(await AuthModel.deviceExists(device,db)) {
-            return await AuthModel.updateDevice({
+        if(await AuthData.deviceExists(device,db.get())) {
+            return await AuthData.updateDevice({
                 user: user,
                 mail : mail,
                 password : password,
                 device : device
-            },db,secret);
+            },db.get(),secret);
         }
         // else register device
         else {
-            return await AuthModel.registerDevice({
+            return await AuthData.registerDevice({
                 user: user,
                 mail : mail,
                 password : password,
                 platform: platform,
                 device : device
-            },db,secret);
+            },db.get(),secret);
         }
 
     }

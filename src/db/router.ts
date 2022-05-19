@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { AuthDb } from "./auth/authDb";
 import { AuthHandler } from "./auth/handler/auth";
 import { BackupHandler } from "./backup/handler/backup";
-import { NOT_IMPLEMENTED_YET, PONG } from "./core/responses";
+import { NOT_IMPLEMENTED_YET, PONG } from "./core/api/Responses";
 
 export class Router{
     

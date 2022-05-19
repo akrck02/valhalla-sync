@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
-import { MISSING_PARAMETERS, NOT_IMPLEMENTED_YET } from "../../core/responses";
-import TaskModel from "../model/taskModel";
+import { MISSING_PARAMETERS, NOT_IMPLEMENTED_YET } from "../../core/api/Responses";
+import { LabelData } from "../../core/data/LabelData";
+import { TaskData } from "../../core/data/TaskData";
 import { UserDb } from "../userDb";
 
 
@@ -56,11 +57,11 @@ export class BackupHandler {
 
     private static async exportTasks(db : UserDb, user : string) {
         
-        const tasks = await TaskModel.getUserTasks(db.get(),"default"); 
+        const tasks = await TaskData.getUserTasks(db.get(),"default"); 
             
         for (const index in tasks) {
             const task = tasks[index];
-            tasks[index].labels = await TaskModel.getUserTaskLabels(db.get(), task.id);
+            tasks[index].labels = await LabelData.getUserTaskLabels(db.get(), task.id);
         }
 
 

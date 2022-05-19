@@ -22,6 +22,16 @@ export class API {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
 
+        /* CORS Control */
+        this.app.use((req : Request, res : Response, next : any) => {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Accept-Language, Content-Language, Content-Type, Access-Control-Allow-Request-Method');
+            res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE');
+            res.header('Allow', 'GET, POST, OPTIONS, PUT, DELETE');
+            next();
+
+        });
+    
 
         /* CORS Control */
         this.app.use((req: Request, res: Response, next: Function) => {
@@ -68,9 +78,10 @@ export class API {
             console.log("error",err);
             res.statusCode = 500;
             res.send({
-            "success" : false,
-            "status": "failed",
-            "reason": err.message
+                "success" : false,
+                "status": "failed",
+                "reason": err.message,
+                "code" : 500
             });
         });
     }
