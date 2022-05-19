@@ -4,22 +4,22 @@ import Logger from "../lib/Logger";
 import fetch from "node-fetch";
 import Assertion from "../lib/Assertion";
 import ITask from "../../db/core/interface/ITask";
+import { Router } from "../../db/router";
+import { request, response } from "express";
 
 export default class SyncTests extends TestSuite {
     tests = [
         new Test(async function exportTasksTest(){
-            const url = "http://127.0.0.1:5500/sync/v1/export";
-            const response = await fetch(url, {
-                method: 'post',
-                body: JSON.stringify({
-                    user : "test"   
-                }),
-                headers: {'Content-Type': 'application/json'}
-            });
+            const router = new Router("UNLIMITED_POWER")
 
-            const body = await response.json();
+            request.body = {
+                user : "test"
+            }
 
-            Logger.log("URL:      " + url)
+            const body = await router.PATHS.export(request,response);
+
+
+            Logger.log("Function:      " + "Export")
             Logger.log("Status:   " + body.code)
             Logger.log("Success:  " + (body.success || body.code == 200))
 
