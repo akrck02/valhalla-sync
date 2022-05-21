@@ -32,20 +32,42 @@ export default class Test {
             if(e.name === "AssertionError") {
                 this.state = TestState.FAILED;
                 Logger.warning("Test failed: " + this.name + " : " + e.message + "\n");
-                process.exit(2);
+                return false;
             }
 
             this.state = TestState.ERROR;
             Logger.error("Test terminated with an unexpected error");
             Logger.log(e);
             Logger.jump();
-            process.exit(2);
+            return false;
         }
     }
 
     public getState() : TestState {
         return this.state;
     }
+
+    public setState(state : TestState) {
+        this.state = state;
+    }
+
+    public getStateName() : string {
+        switch (this.state) {
+            case TestState.ERROR:
+                return "ERROR" 
+            case TestState.FAILED:
+                return "FAILED"
+            case TestState.PASSED: 
+                return "PASSED"     
+            case TestState.SKIPPED: 
+                return "SKIPPED "    
+            case TestState.PENDING: 
+                return "PENDING"    
+            default:
+                return "UNKNOWN";
+        }
+    }
+
 
     public getName() : string {
         return this.name;

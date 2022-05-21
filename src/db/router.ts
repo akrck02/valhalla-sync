@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { AuthDb } from "./auth/authDb";
-import { AuthHandler } from "./auth/handler/auth";
-import { BackupHandler } from "./backup/handler/backup";
+import { AuthDb } from "./core/classes/AuthDb";
+import { AuthHandler } from "./auth/auth";
+import { BackupHandler } from "./backup/backup";
 import { NOT_IMPLEMENTED_YET, PONG } from "./core/api/Responses";
 
 export class Router{
@@ -25,6 +25,12 @@ export class Router{
             "upload" :  () => NOT_IMPLEMENTED_YET,
             "export" : (req,res) => BackupHandler.export(req,res)
         }
+    }
+
+    public async start() {
+        await this.auth.open();
+        await this.auth.createTables();
+
     }
 
 }

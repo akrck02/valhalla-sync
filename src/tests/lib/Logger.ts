@@ -25,14 +25,21 @@ export default class Logger {
     }
 
     static hardTitle(title : string) {
-        console.info("\n##########################################");
+        Logger.jump();
+        Logger.line("#");
         console.info("  " + title.toUpperCase() + " ");
-        console.info("##########################################");
+        Logger.line("#");
     }
 
     static softTitle(title : string) {
-        console.info("\n------------------------------------------");
+        Logger.jump();
+        Logger.line();
         console.info("  " + title);
-        console.info("------------------------------------------");
+        Logger.line();
+    }
+
+    static line(char : string = "-"){
+        let line = char;
+        console.info(line.repeat(42));
     }
 }

@@ -12,12 +12,14 @@ export class API {
 
     constructor() {
         this.app = express();
-        this.hostname = "127.0.0.1";
+        this.hostname = "0.0.0.0";
         this.port = 5500;
         this.router = new Router("***");
     }
 
-    public start(): void {
+    public async start(): Promise<void> {
+
+        await this.router.start();
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
@@ -31,7 +33,6 @@ export class API {
             next();
 
         });
-    
 
         /* CORS Control */
         this.app.use((req: Request, res: Response, next: Function) => {
