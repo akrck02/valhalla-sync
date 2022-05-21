@@ -1,0 +1,54 @@
+{
+    "user" : {
+        "name" : "akrck02",
+        "oauth" : "#",
+        "email" : "akrck02@gmail.com",
+        "picture" : "img13.png"
+    },
+    
+    "tasks" : {
+        "1" : {
+            "author" : "akrck02",
+            "name" : "Develop levehnstein distance method",
+            "description" : "The lebvnhstein distance is the numerical difference between two strings calculated givin a value to every change that has to be done on A to be converted to B",
+            "start" : "12/01/2022",
+            "end" : "12/01/2022",
+            "done" : "false",
+            "labels" : ["Development","Today"]
+        },
+        "2" : {
+            "author" : "akrck02",
+            "name" : "Develop searchbar component HTML/CSS/Typescript",
+            "start" : "12/01/2022",
+            "end" : "24/01/2022",
+            "done" : "true",
+            "labels" : ["Development"]
+        }
+    }, 
+    
+    "notes" : {
+        "1" : {
+            "title" : "Very Important Stuff (VIS)",
+            "content" : "Hi there! <3",
+            "author" : "akrck02"
+        }, 
+        "2" : {
+            "title" : "uwu",
+            "content" : "owo",
+            "author" : "akrck02",
+            "task" : "2"
+        }
+    },
+
+    "config" : {
+        "appearence" :{
+            "wallpaper" : "Wall13.png",
+            "theme" : "dark",
+            "animations" : "true"
+        },
+        "user" : {
+            "lang" : "en"
+        }
+    }
+    
+}

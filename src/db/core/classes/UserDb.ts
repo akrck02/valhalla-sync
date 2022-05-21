@@ -1,15 +1,15 @@
-import { Database } from "../db"
+import Paths from "../config/Paths";
+import { Database } from "./Database";
 
 export class UserDb extends Database {
 
     constructor(name : string) {
-        console.log("UserDB", "Opening database for user " + name)
         super(name + "-user");
     }
 
     async createTables() {
         const fs = require('fs');
-        const query = fs.readFileSync('res/user-db.sql', 'utf8');
+        const query = fs.readFileSync(Paths.USER_CREATE_TABLES, 'utf8');
         await this.db.exec(query);
     }
 }

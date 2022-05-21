@@ -11,5 +11,5 @@ export class AuthDb extends Database {
         const fs = require('fs');
         const query = fs.readFileSync('res/auth.sql', 'utf8');
         await this.db.exec(query);
-    }
+    } 
 }
