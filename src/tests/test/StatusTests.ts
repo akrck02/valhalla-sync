@@ -30,6 +30,6 @@ export default class StatusTests extends TestSuite {
     ];
 
     async runAll(){
-        await TestSuite.runAll(this.constructor.name,this.tests)
+        return await super.runAll(this.constructor.name)
     }
 }

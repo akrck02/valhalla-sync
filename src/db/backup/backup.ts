@@ -1,8 +1,10 @@
 import { Request, Response } from "express";
-import { MISSING_PARAMETERS, NOT_IMPLEMENTED_YET } from "../../core/api/Responses";
-import { LabelData } from "../../core/data/LabelData";
-import { TaskData } from "../../core/data/TaskData";
-import { UserDb } from "../userDb";
+import { MISSING_PARAMETERS, NOT_IMPLEMENTED_YET } from "../core/api/Responses";
+import { LabelData } from "../core/data/LabelData";
+import { TaskData } from "../core/data/TaskData";
+import { UserDb } from "../core/classes/UserDb";
+import { NoteData } from "../core/data/NoteData";
+import INote from "../core/interface/INote";
 
 
 
@@ -14,6 +16,8 @@ interface UserData {
 }
 
 export class BackupHandler {
+
+    private static DEFAULT_USER : string = "default";
 
     public static import (req : Request, res : Response) : Promise<any> {
         return new Promise(r => r(NOT_IMPLEMENTED_YET))
@@ -38,38 +42,41 @@ export class BackupHandler {
         await db.open();
 
         this.exportUser(user);
-        const tasks = await this.exportTasks(db, user);
-        this.exportNotes();
+        const tasks = await this.exportTasks(db, this.DEFAULT_USER);
+        const notes = await this.exportNotes(db, this.DEFAULT_USER);
         this.exportConfig();
 
         return new Promise(r => r({
             code : 200,
-            tasks: tasks
+            tasks: tasks,
+            notes: notes
         }));
     }
 
     private static async exportUser(user : UserData) : Promise<any> {
-        if(!user.name || !user.email || !user.oauth){
+        if(!user.name || !user.email || !user.oauth) {
             return MISSING_PARAMETERS
         }
-
     }
 
     private static async exportTasks(db : UserDb, user : string) {
         
-        const tasks = await TaskData.getUserTasks(db.get(),"default"); 
+        const tasks = await TaskData.getUserTasks(db.get(),user); 
             
         for (const index in tasks) {
             const task = tasks[index];
             tasks[index].labels = await LabelData.getUserTaskLabels(db.get(), task.id);
         }
 
-
         return tasks
     }
 
-    private static exportNotes() {
+    private static async exportNotes(db : UserDb, user : string) : Promise<INote[]>{
 
+        const notes = await NoteData.getuserNotes(db.get(),user);
+
+
+        return notes;
     }
 
     private static exportConfig() {

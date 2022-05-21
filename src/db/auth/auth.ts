@@ -1,10 +1,9 @@
 
 import { Request, Response } from "express";
-import { sign } from "jsonwebtoken";
-import { VerifyJWT } from "../../../secure/jwt";
-import { INCORRECT_CREDENTIALS, MISSING_PARAMETERS, SOMETHING_WENT_WRONG } from "../../core/api/Responses";
-import AuthData from "../../core/data/AuthData";
-import { AuthDb } from "../authDb";
+import { VerifyJWT } from "../../secure/jwt";
+import { INCORRECT_CREDENTIALS, MISSING_PARAMETERS } from "../core/api/Responses";
+import AuthData from "../core/data/AuthData";
+import { AuthDb } from "../core/classes/AuthDb";
 
 export class AuthHandler {
 
