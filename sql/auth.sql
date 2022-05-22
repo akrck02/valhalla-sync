@@ -14,3 +14,9 @@ auth_device (
     FOREIGN KEY(auth) REFERENCES auth(username)
 );
 
+CREATE TABLE IF NOT EXISTS 
+sync_registry (
+    auth TEXT PRIMARY KEY,
+    date TEXT,
+    FOREIGN KEY(auth) REFERENCES auth(username)
+);

@@ -6,25 +6,21 @@ import Assertion from "../lib/Assertion";
 import ITask from "../../db/core/interface/ITask";
 import { Router } from "../../db/router";
 import { request, response } from "express";
+import { AuthHandler } from "../../db/auth/auth";
+import { BackupHandler } from "../../db/backup/backup";
 
 export default class TaskTests extends TestSuite {
     tests = [
         new Test(async function exportTasksTest(){
-            const router = new Router("UNLIMITED_POWER")
-
-            request.body = {
-                user : "test"
-            }
-
-            const body = await router.PATHS.export(request,response);
-
+           
+            const body = await BackupHandler.export("test");
 
             Logger.log("Function: " + "Export")
             Logger.log("Status:   " + body.code)
             Logger.log("Success:  " + (body.success || body.code == 200))
 
             Assertion.assert(body,"Cannot ping the sync API")
-            Assertion.assert(body.success || body.code == 200 ,"The sync API send an error [" + body.code + "] " + body.reason)
+            Assertion.assert(body.success || body.code == 200 ,"The sync API send an error [" + body.code + "] " + body.message)
 
             const tasks : ITask[] = body.tasks;
             const task1 = {
@@ -43,7 +39,7 @@ export default class TaskTests extends TestSuite {
                 id: 2,
                 author : "default",
                 name : "Task 2",
-                description : "generic description",
+                description : "Generic description",
                 start : "2022-05-19",
                 end : "2022-05-19",
                 allDay : 0,
@@ -54,14 +50,16 @@ export default class TaskTests extends TestSuite {
             const task3  = {
                 id: 3,
                 author : "default",
-                name : "Task3",
+                name : "Task 3",
                 description : "Generic description",
                 start : "2022-05-19",
                 end : "2022-05-19",
                 allDay : 0,
-                done : 0,
+                done : 1,
                 labels : ["Label2"]
             }
+            
+            console.log(tasks[0].id);
             
             Assertion.assert(tasks[0].id == task1.id, "[Task 1] id not matching");
             Assertion.assert(tasks[0].name == task1.name, "[Task 1] name not matching");
@@ -88,9 +86,7 @@ export default class TaskTests extends TestSuite {
             Assertion.assert(tasks[2].end == task3.end, "[Task 3] end date not matching");
             Assertion.assert(tasks[2].allDay == task3.allDay, "[Task 3] allDay not matching");
             Assertion.assert(tasks[2].done == task3.done, "[Task 3] done not matching");
-            Assertion.assert(tasks[2].labels?.join("") == task3.labels.join(""), "[Task 3] labels not matching");
-
-            
+            Assertion.assert(tasks[2].labels?.join("") == task3.labels.join(""), "[Task 3] labels not matching");            
         })
     ]
 

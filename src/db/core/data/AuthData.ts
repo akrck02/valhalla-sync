@@ -63,6 +63,7 @@ export default class AuthData {
         
         return new Promise((resolve) => resolve({
             success : true,
+            code: 200,
             token : token,
             id: id.lastID
         }));
@@ -104,6 +105,7 @@ export default class AuthData {
         
         return new Promise((resolve) => resolve({
             success : true,
+            code: 200,
             token : token,
             id: properties.device
         }));

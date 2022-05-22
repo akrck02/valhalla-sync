@@ -22,7 +22,7 @@ export default class StatusTests extends TestSuite {
             Logger.log("Response: " + body.message)
 
             Assertion.assert(body,"Cannot ping the sync API")
-            Assertion.assert(body.success ,"The sync API send an error [" + body.code + "] " + body.reason)
+            Assertion.assert(body.success ,"The sync API send an error [" + body.code + "] " + body.message)
             
             Logger.jump();
         }),

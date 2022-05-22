@@ -8,18 +8,18 @@ export class API {
     private app: any;
     private hostname: string;
     private port: number;
-    private router: Router;
+    private secret: string;
 
     constructor() {
         this.app = express();
         this.hostname = "0.0.0.0";
         this.port = 5500;
-        this.router = new Router("***");
+        this.secret  = "***";
     }
 
     public async start(): Promise<void> {
 
-        await this.router.start();
+        const paths = await Router.start(this.secret);
 
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
@@ -42,13 +42,12 @@ export class API {
         });
 
         /* Define every route with callbacks */
-        const paths = this.router.PATHS;
         for (const key in paths) {
             const callback = paths[key];
-            this.app.post(Router.API + key + "/", (req: Request, res: Response) => this.handleRequest(key,req,res,callback));
+            this.app.post(Router.API + key + "/", (req: Request, res: Response) => this.handleRequest(key,req,res,callback as any));
             this.app.get(Router.API + key + "/", (req: Request, res: Response) => {
                 this.getParametersToBody(req);
-                this.handleRequest(key,req,res,callback);
+                this.handleRequest(key,req,res,callback as any);
             })
               
         }
@@ -81,7 +80,7 @@ export class API {
             res.send({
                 "success" : false,
                 "status": "failed",
-                "reason": err.message,
+                "message": err.message,
                 "code" : 500
             });
         });
@@ -106,19 +105,4 @@ export class API {
 
         req.body = body;
     }
-
-
-    /*
-        static checkDeviceAuth(req : Request, res : Response) {
-            const token = req.headers['device'];
-            if (token === undefined || !AuthModel.isDeviceAuthenticated(token + "")) {
-                res.send({
-                    "status": "failed",
-                    "reason": "Invalid API credentials"
-                });
-                return;
-            }
-        }
-    */
-
 }
