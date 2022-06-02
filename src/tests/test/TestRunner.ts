@@ -103,7 +103,7 @@ async function start(selectedSuite : string){
                 process.exit(1);
             }
         })
-    }
+    })
 }
 
 
