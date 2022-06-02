@@ -95,6 +95,15 @@ async function start(selectedSuite : string){
     Logger.jump();
     Logger.line();
     Logger.log("TOTAL TIME: " + (end-start) + "ms.\n");
+
+
+    RUNNED_SUITES.forEach(suite => {
+        suite.getTests().forEach((test : Test) =>{
+            if(test.getState() == TestState.FAILED || test.getState() == TestState.ERROR){
+                process.exit(1);
+            }
+        })
+    }
 }
 
 
