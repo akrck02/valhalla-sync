@@ -8,7 +8,7 @@ export default class Assertion {
         });
     }
 
-    static assert(condition : boolean, message : string) {
+    static assert(condition : boolean, message : string = "assertion failed") {
         if(!condition)
             this.fail(message);
     }

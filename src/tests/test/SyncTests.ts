@@ -8,6 +8,15 @@ import Assertion from "../lib/Assertion";
 import Logger from "../lib/Logger";
 
 export default class SyncTests extends TestSuite {
+
+    private static USER_DATA = {
+        user : "test",
+        password: "test",
+        mail : "test.user@test.user",
+        device: "0.0.0.0",
+        platform : "Linux"
+    }
+
     tests = [
        
         /**
@@ -15,14 +24,7 @@ export default class SyncTests extends TestSuite {
          */
         new Test(async function registerRandomUserTest() {
 
-            request.body = {
-                user : "test",
-                password: "test",
-                mail : "test.user@test.user",
-                device: "0.0.0.0",
-                platform : "Linux"
-            }
-
+            request.body = SyncTests.USER_DATA;
             const paths = await Router.start("***","test")
             const body = await paths.register(request,response);
 
@@ -36,14 +38,7 @@ export default class SyncTests extends TestSuite {
          */
         new Test(async function loginTest() {
 
-            request.body = {
-                user : "test",
-                password: "test",
-                mail : "test.user@test.user",
-                device: "0.0.0.0",
-                platform : "Linux"
-            }
-
+            request.body = SyncTests.USER_DATA;
             const paths = await Router.start("***","test")
             const body = await paths.login(request,response);
 
@@ -58,14 +53,7 @@ export default class SyncTests extends TestSuite {
         new Test(async function alreadySyncTest() {
 
             // LOGIN
-            request.body = {
-                user : "test",
-                password: "test",
-                mail : "test.user@test.user",
-                device: "0.0.0.0",
-                platform : "Linux"
-            }
-
+            request.body = SyncTests.USER_DATA;
             const paths = await Router.start("***","test")
             const res = await paths.login(request,response);
 
@@ -91,12 +79,11 @@ export default class SyncTests extends TestSuite {
             Logger.log(JSON.stringify(body));
 
             Assertion.assert(body,"Cannot ping the sync API")
-            Assertion.assert(body.success && body.code == 605 ,"The sync API send an error on wsync [" + res.code + "] " + res.message)
+            Assertion.assert(body.success && body.code == 605 ,"The sync API send an error on sync [" + res.code + "] " + res.message)
 
             Logger.log("Function: " + "Sync")
             Logger.log("Status:   " + body.code)
             Logger.log("Success:  " + (body.success || body.code == 605))
-
          
         }),
 

@@ -42,16 +42,21 @@ export class BackupHandler {
         const clientSyncDate = new Date(clientData.lastSync);
         const serverData = await this.export(tokenInfo.username); 
 
+        Logger.log(lastSyncDate.getTime())
         Logger.log(lastSyncDate)
+        Logger.log(clientSyncDate.getTime())
         Logger.log(clientSyncDate)
 
         // If data outdated 
-        if(lastSyncDate.getTime() > clientSyncDate.getTime()){
+
+        const compareResult = DateUtils.compareBySecondConversion(lastSyncDate, clientSyncDate);
+
+        if(compareResult == -1) {
             return await new RebaseStrategy().apply(serverData, clientData);;
         }
         
         // else if data is already sync
-        else if(BackupHandler.sameData(clientData, serverData)) {
+        if(BackupHandler.sameData(clientData, serverData)) {
             return ALREADY_SYNC;    
         }
 

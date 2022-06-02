@@ -7,10 +7,12 @@ import NoteTests from "./NoteTests";
 import StatusTests from "./StatusTests";
 import SyncTests from "./SyncTests";
 import TaskTests from "./TaskTests";
+import DateUtilsTests from "./utils/DateUtilsTests";
 console.log = Logger.log;
 
 const TEST_SUITES : any[] = [
     //StatusTests,
+    DateUtilsTests,
     SyncTests,
     TaskTests,
     NoteTests
@@ -39,7 +41,6 @@ async function start(selectedSuite : string){
     const start = new Date().getTime();
     const RUNNED_SUITES : TestSuite[] = [];
     let result : boolean  = true; 
-
 
     for (let i = 0; i < TEST_SUITES.length; i++) {
         const suiteType = TEST_SUITES[i];
