@@ -21,4 +21,14 @@ export class LabelData {
         return new Promise((r) => r(labels));
     }
 
+     /**
+     * Set a tag to a task
+     * @param db The database connection
+     * @param task The task 
+     * @param tag The tag to be set 
+     */
+    public static async setLabelToTask(db : Database, task: string, tag: string){
+        const SQL = "INSERT INTO task_label(taskId, label) VALUES (?,?)";
+        await db.run(SQL,task,tag)
+    } 
 }

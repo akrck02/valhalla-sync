@@ -1,5 +1,5 @@
 export interface ILoginParams {
-    device : string,
+    address : string,
     user : string,
     mail : string,
     password : string,

@@ -7,10 +7,18 @@ auth (
 
 CREATE TABLE IF NOT EXISTS 
 auth_device (
-    device INTEGER PRIMARY KEY AUTOINCREMENT,
     auth TEXT,
     platform TEXT,
+    address TEXT,
     token TEXT, 
+    PRIMARY KEY(auth, platform, address),
     FOREIGN KEY(auth) REFERENCES auth(username)
+    
 );
 
+CREATE TABLE IF NOT EXISTS 
+sync_registry (
+    auth TEXT PRIMARY KEY,
+    date TEXT,
+    FOREIGN KEY(auth) REFERENCES auth(username)
+);

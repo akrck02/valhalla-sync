@@ -58,3 +58,9 @@ export const USER_DOES_NOT_EXIST = new Promise<HttpResponse>((r) => r({
     message: "User does not exist.", 
     code : 604
 })); 
+
+export const ALREADY_SYNC = new Promise<HttpResponse>((r) => r({
+    success: true, 
+    message: "Data is already sync.", 
+    code : 605
+})); 
