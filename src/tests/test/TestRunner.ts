@@ -2,6 +2,7 @@ import Test from "../classes/Test";
 import { TestState } from "../classes/TestState";
 import TestSuite from "../classes/TestSuite";
 import Logger from "../lib/Logger";
+import { PreloadGenerateDevFiles } from "../preload/PreloadGenerateDevFiles";
 import { PreloadTestDatabases } from "../preload/PreloadTestDatabases";
 import NoteTests from "./NoteTests";
 import StatusTests from "./StatusTests";
@@ -24,7 +25,8 @@ async function start(selectedSuite : string){
      * Execute preload scripts
      */
     const PRELOAD_SCRIPTS = [
-        PreloadTestDatabases
+        PreloadTestDatabases,
+        //PreloadGenerateDevFiles
     ];
 
 

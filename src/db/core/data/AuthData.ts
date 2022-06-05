@@ -42,7 +42,7 @@ export default class AuthData {
      */
      public static async registerDevice(properties : ILoginParams, db : Database ,secret : string) : Promise<any>{
 
-        if(!properties || !properties.user || !properties.device || !properties.password || !properties.mail){
+        if(!properties || !properties.user || !properties.address || !properties.password || !properties.mail){
             return MISSING_PARAMETERS;
         }
 
@@ -50,14 +50,15 @@ export default class AuthData {
             username : properties.user,
             password : properties.password,
             mail     : properties.mail,
-            device   : properties.device
+            device   : properties.address
         }, secret);
 
-        const SQL = "INSERT INTO auth_device(auth, platform, token) VALUES (?,?,?)";
+        const SQL = "INSERT INTO auth_device(auth, platform, address, token) VALUES (?,?,?,?)";
         const id = await db.run(
             SQL,
             properties.user,
             properties.platform || "NULL",
+            properties.address,
             token
         );
         
@@ -76,15 +77,15 @@ export default class AuthData {
     * @param res the current response 
     * @returns A promise that resolves whether or not the device was registered
     */
-    public static async updateDevice(properties : {
-        device ?: string,
+    public static async updateDeviceByAddress(properties : {
+        address ?: string,
         user ?: string,
         mail ?: string,
         password ?: string,
         platform ?: string
     } = {}, db : Database ,secret : string) : Promise<any>{
 
-        if(!properties.user || !properties.device || !properties.password || !properties.mail){
+        if(!properties.user || !properties.address || !properties.password || !properties.mail){
             return MISSING_PARAMETERS;
         }
 
@@ -92,31 +93,34 @@ export default class AuthData {
             username : properties.user,
             password : properties.password,
             mail     : properties.mail,
-            device   : properties.device
+            device   : properties.address
         }, secret);
         
-        const SQL = "UPDATE auth_device SET auth=?, platform=?, token=? WHERE device=?"
-        await db.run(
+        const SQL = "UPDATE auth_device SET auth=?, platform=?, token=? WHERE address=?"
+        const id = await db.run(
             SQL,
             properties.user,
             properties.platform || "NULL",
-            token
+            token,
+            properties.address 
         );
         
         return new Promise((resolve) => resolve({
             success : true,
             code: 200,
             token : token,
-            id: properties.device
+            address: id.lastID
         }));
     }
 
 
-    public static async deviceExists(device : string, db : Database) : Promise<boolean> {
-        const DEVICE_SQL = "SELECT * FROM auth_device WHERE device=?";
+    public static async deviceExists(auth : string,address : string, platform : string, db : Database) : Promise<boolean> {
+        const DEVICE_SQL = "SELECT * FROM auth_device WHERE auth=? AND platform=? AND address=?";
         const devices = await db.all(
             DEVICE_SQL,
-            device
+            auth,
+            platform,
+            address
         );
 
         return devices && devices.length > 0; 

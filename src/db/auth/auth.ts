@@ -65,10 +65,10 @@ export class AuthHandler {
         const username = req.body.user;
         const password = req.body.password;
         const mail = req.body.mail;
-        const device = req.body.device;
+        const address = req.body.address;
         const platform = req.body.platform;
 
-        if(!username || !password || !mail || !device) {
+        if(!username || !password || !mail || !address) {
             await db.get().close();
             return MISSING_PARAMETERS;
         }
@@ -78,7 +78,7 @@ export class AuthHandler {
                 user: username,
                 password: password,
                 mail : mail,
-                device : device,
+                address : address,
                 platform : platform
             },db.get(),secret)
 
@@ -98,7 +98,7 @@ export class AuthHandler {
             const mail = req.body.mail;
             const password = req.body.password;
             const platform = req.body.platform;
-            let device =  req.body.device;
+            let address =  req.body.address;
             
             // check if correct credentials
             const login = await AuthData.login({
@@ -106,7 +106,7 @@ export class AuthHandler {
                 password : password,
                 mail : mail,
                 platform : platform,
-                device : device
+                address : address
             },db.get());
 
             if(!login) {
@@ -115,12 +115,14 @@ export class AuthHandler {
             }
 
             // if device send (check device) 
-            if(await AuthData.deviceExists(device,db.get())) {
-                const update = await AuthData.updateDevice({
+            if(await AuthData.deviceExists(user,address,platform,db.get())) {
+                
+                const update = await AuthData.updateDeviceByAddress({
                     user: user,
                     mail : mail,
                     password : password,
-                    device : device
+                    platform : platform,
+                    address : address
                 },db.get(),secret);
 
                 await db.get().close();
@@ -133,7 +135,7 @@ export class AuthHandler {
                     mail : mail,
                     password : password,
                     platform: platform,
-                    device : device
+                    address : address
                 },db.get(),secret);
 
                 await db.get().close();

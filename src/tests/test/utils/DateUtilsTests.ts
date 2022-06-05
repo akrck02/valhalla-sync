@@ -1,4 +1,4 @@
-import DateUtils from "../../../db/utils/DateUtils";
+import DateUtils from "../../../db/core/utils/DateUtils";
 import Test from "../../classes/Test";
 import TestSuite from "../../classes/TestSuite";
 import Assertion from "../../lib/Assertion";

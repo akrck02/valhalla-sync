@@ -1,4 +1,4 @@
-import DateUtils from "../utils/DateUtils";
+import DateUtils from "../core/utils/DateUtils";
 import SyncStrategy from "./SyncStrategy";
 
 export default class RebaseStrategy extends SyncStrategy {
