@@ -148,7 +148,7 @@ export default class SyncTests extends TestSuite {
          */
         new Test(async function syncTest() {
 
-            return "Ignoring test";
+            return "ignored";
             // LOGIN
             request.body = SyncTests.USER_DATA
 

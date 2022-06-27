@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import Logger from "../../tests/lib/Logger";
 import { AuthHandler } from "../auth/auth";
-import { ALREADY_SYNC, INCORRECT_CREDENTIALS, MISSING_PARAMETERS, NOT_IMPLEMENTED_YET } from "../core/api/Responses";
+import { ALREADY_SYNC, INCOMPATIBLE_VERSION, INCORRECT_CREDENTIALS, MISSING_PARAMETERS, NOT_IMPLEMENTED_YET } from "../core/api/Responses";
 import { UserDb } from "../core/classes/UserDb";
 import { LabelData } from "../core/data/LabelData";
 import { NoteData } from "../core/data/NoteData";
@@ -63,13 +63,7 @@ export class BackupHandler {
         }
 
         // else import client data
-        await this.import(tokenInfo.username);
-        return new Promise((r) => r({
-            success : true,
-            code : 200,
-            lastSync : DateUtils.toSQLiteDate(new Date())
-        }));
-
+        return await this.import(tokenInfo.username);
     }
 
     /**
@@ -124,12 +118,20 @@ export class BackupHandler {
             return MISSING_PARAMETERS;
         }
 
-        //const db = new UserDb(auth);
-        //await db.open();
+        const db = new UserDb(auth);
+        await db.open();
 
         // Check if tables exists
+        const versionCheck = true;
+        if(!versionCheck) {
+            return INCOMPATIBLE_VERSION;
+        }
 
-        // Che   
+        // fill data
+        
+        
+
+        
 
         return new Promise(r => r(NOT_IMPLEMENTED_YET))
     }

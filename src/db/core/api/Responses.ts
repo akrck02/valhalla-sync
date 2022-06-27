@@ -64,3 +64,9 @@ export const ALREADY_SYNC = new Promise<HttpResponse>((r) => r({
     message: "Data is already sync.", 
     code : 605
 })); 
+
+export const INCOMPATIBLE_VERSION = new Promise<HttpResponse>((r) => r({
+    success: false, 
+    message: "Incompatible version.", 
+    code : 700
+})); 
